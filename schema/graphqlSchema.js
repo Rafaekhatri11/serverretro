@@ -27,8 +27,8 @@ const user = new GraphQLObjectType({
 const Email =  new GraphQLObjectType({
     name : "email",
     fields : () => ({
-        email: {type : GraphQLString},
-        adminstatus : {type : GraphQLString}
+        email: {type : new GraphQLNonNull( GraphQLString)},
+        adminstatus : {type : new GraphQLNonNull(GraphQLString)}
     })
 })
 
@@ -52,7 +52,8 @@ const setretroobj = new GraphQLObjectType({
         Enddate: { type: new GraphQLNonNull(GraphQLString) },
         repeatevery: { type: new GraphQLNonNull(GraphQLString) },
         Endson: { type: new GraphQLNonNull(GraphQLString) },
-        
+        // Email: {type : new GraphQLList(Email)},
+        createdat : {type : new GraphQLNonNull(GraphQLString) }
     })
 })
 
@@ -282,7 +283,9 @@ const Mutation = new GraphQLObjectType({
                 Enddate: { type: new GraphQLNonNull(GraphQLString) },
                 repeatevery: { type: new GraphQLNonNull(GraphQLString) },
                 Endson: { type: new GraphQLNonNull(GraphQLString)},
-               
+                adminstatus : {type : new GraphQLNonNull(GraphQLString)},
+                // Email:{type: new GraphQLList(Email)},
+                createdat : {type : new GraphQLNonNull(GraphQLString)}
             },
             resolve(parent, args) {
                 let data = new setretro({
@@ -302,7 +305,8 @@ const Mutation = new GraphQLObjectType({
                     Enddate: args.Enddate,
                     repeatevery: args.repeatevery,
                     Endson: args.Endson,
-                  
+                    // Email : args.Email,
+                    createdat : args.createdat
 
                 })
                 return data.save();
@@ -329,7 +333,7 @@ const Mutation = new GraphQLObjectType({
                 return Registration.findOne({ email: args.email }).then(user => {
                     if (user) {
                         return new Error("This email address is already exist")
-                        // return user  
+                   // return user  
                     }
                     else {
                         return data.save();
